@@ -9,6 +9,7 @@ const AppStack = createStackNavigator();
 // Importando os componentes de página
 import LoginScreen from "./pages/LoginScreen"
 import TecScreen from './pages/TecScreen';
+import ListPage from './pages/ListPage';
 
 // Definindo as rotas através de uma função (anônima) arrow 
 const Routes = () => {
@@ -21,6 +22,7 @@ const Routes = () => {
         {/*** A primeira que é indicada torna-se a inicial ***/}
         <AppStack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown:false }}/>       
         <AppStack.Screen name="TecScreen" component={TecScreen} options={{ headerShown:false }}/>       
+        <AppStack.Screen name="ListPage" component={ListPage} options={{ headerShown:false }}/>       
       </AppStack.Navigator>
     </NavigationContainer>
   );

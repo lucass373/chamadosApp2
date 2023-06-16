@@ -5,16 +5,15 @@ import * as Google from "expo-auth-session/providers/google";
 
 WebBrowser.maybeCompleteAuthSession();
 
-export default function TecScreen({route, navigation}) {
+export default function ListPage({route, navigation}) {
 
     const {id} = route.params;
+
+    console.log(id)
   return (
     <View style={styles.container}>
-     <Text>Tecnico page</Text>
-        <View style={styles.viewOpc}>
-          <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('ListPage',{id: id})}}><Text>Listar Chamados</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.button}><Text>Listar Usuários</Text></TouchableOpacity>
-        </View>
+     <Text>Listar Chamados</Text>
+   
     </View>
     
   );

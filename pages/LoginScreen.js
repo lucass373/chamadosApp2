@@ -38,16 +38,21 @@ export default function LoginScreen({navigation}) {
 
       const user = await response.json();
       setUserInfo(user);
-     
-      
+
+      let existeUid = await dao.verificarExiste(user.id)
+
+      if(existeUid){
+        console.log(existeUid)
+        navigation.navigate("TecScreen",{id: user.id})
+      }
     } catch (error) {
       console.log(error)
     }
   };
 
   async function incluirUsr(mtrl){
-    let existeUid = await dao.verificarExiste(userInfo.uid)
     let existeMat = await dao.verificarExisteMat(mtrl);
+    console.log(existeUid)
     if(existeUid){
      
   }
@@ -56,7 +61,7 @@ export default function LoginScreen({navigation}) {
     if(existeMat == true){
       alert("Matricula Existe")
     }else{
-    let nUser = new User(userInfo.id,userInfo.email,userInfo.name,"User",false, mtrl)
+    let nUser = new User(userInfo.id,userInfo.email,userInfo.name,"Tec",false, mtrl)
     dao.incluir(nUser)
     navigation.navigate("TecScreen",{id: userInfo.id})
     }
