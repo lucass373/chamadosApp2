@@ -45,10 +45,22 @@ export default function LoginScreen({navigation}) {
     }
   };
 
-  function incluirUsr(mtrl){
+  async function incluirUsr(mtrl){
+    let existeUid = await dao.verificarExiste(userInfo.uid)
+    let existeMat = await dao.verificarExisteMat(mtrl);
+    if(existeUid){
+     
+  }
+  else{
+    console.log(existeMat)
+    if(existeMat == true){
+      alert("Matricula Existe")
+    }else{
     let nUser = new User(userInfo.id,userInfo.email,userInfo.name,"User",false, mtrl)
     dao.incluir(nUser)
     navigation.navigate("TecScreen",{id: userInfo.id})
+    }
+  }
   }
 
 
