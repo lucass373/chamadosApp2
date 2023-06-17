@@ -1,4 +1,4 @@
-import ModelError from "./ModelError.js";
+import ModelError from "../classes/ModelError";
 import {
   getDatabase,
   orderByValue,
@@ -17,7 +17,7 @@ import {
   get,
 } from "firebase/database";
 import { init } from "./firebase.js";
-import Chamados from "./Chamados.js";
+import Chamados from "../classes/Chamados";
 
 const db = getDatabase(init);
 
@@ -211,6 +211,24 @@ async obterChamadosFiltradoTec() {
     })
   }
     
+
+  async obterAuxiliaresFiltrado(protocolo) {
+    let connection = await this.obterConexao();
+    const chamadosRef = ref(connection, "chamados/"+protocolo+"/auxiliares");
+    const snapshot = await get(chamadosRef);
+    const filt = [];
+    return new Promise((resolve, reject) => {
+      snapshot.forEach((childSnapshot) => {
+        const childData = childSnapshot.val();
+        filt.push(childData);
+      });
+      if (filt.length > 0) {
+        resolve(filt);
+      } else {
+        reject(`Não há dados com o protocolo ${protocolo}`);
+      }
+    });
+  }
 /*
    async obterUserPeloUid(uid) {
     let connection = await this.obterConexao();
