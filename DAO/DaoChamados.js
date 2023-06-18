@@ -203,8 +203,10 @@ async obterChamadosFiltradoTec() {
         "problema": problema,
         "sala": sala
       }
-      update(refChamado, updates).then(
-      resolve(true)
+      update(refChamado, updates).then(()=>{
+        resolve(true)
+        alert("Chamado Alterado com sucesso!")
+      }
       ).catch(
       reject(false))
     })
@@ -244,19 +246,23 @@ async obterChamadosFiltradoTec() {
     })
   }
 
-  async incluirAuxiliar(protocolo,nome, num) {
+  async incluirAuxiliar(protocolo,nome, uid) {
     let connection = await this.obterConexao();
-   
+    var numAux = await this.obterNumAux(protocolo)
+    numAux= Number(numAux) + 1
+    const existe = await this.verificarExisteAux(uid,protocolo)
     //--------- PROMISE --------------//
     let resultado = new Promise((resolve, reject) => {
       let refAuxiliar = ref(connection, "chamados/"+protocolo+"/auxiliares");
       runTransaction(refAuxiliar, (auxiliar) => {
 
-        let refNewAuxiliar = child(refAuxiliar, num);
+        let refNewAuxiliar = child(refAuxiliar, numAux.toString());
+        if (existe === false){
         let setPromise = set(refNewAuxiliar, {
-          "num": num,
+          "num": numAux,
           "nome": nome,
-        });
+          "uid" : uid,        });
+       
         setPromise.then(
           (value) => {
             resolve(true);
@@ -265,6 +271,9 @@ async obterChamadosFiltradoTec() {
             reject(erro);
           }
         );
+        }else{
+          alert("você já está auxiliando o chamado")
+        }
       });
     });
     return resultado;
@@ -296,7 +305,48 @@ async obterChamadosFiltradoTec() {
     });
   }
 
-  
+  async verificarExisteAux(uid,protocolo) {
+    let connection = await this.obterConexao();
+    let refUser = ref(connection, "chamados/"+protocolo+"/auxiliares");
+    let query1 = query(refUser, orderByChild("uid"), equalTo(uid));
+    //--------- PROMISE --------------//
+    return new Promise(function (resolve, reject) {
+ 
+      onValue(query1, function (snapshot) {
+        snapshot.forEach(function (childSnapshot) {
+          const uid = childSnapshot.val();
+          if(uid != null){
+            resolve(true)
+          }
+        });
+        // Se nenhum usuário foi encontrado, resolve com null
+         resolve(false);
+      });
+  });
+}
+
+
+async obterAuxPeloUid(uid,protocolo) {
+  let connection = await this.obterConexao();
+  let refUser = ref(connection, "chamados/"+protocolo+"/auxiliares");
+  let query1 = query(refUser, orderByChild("uid"), equalTo(uid));
+  let promessa = new Promise(function (resolve, reject) {
+    try {
+      onValue(query1, function (snapshot) {
+        snapshot.forEach(function (childSnapshot) {
+          const aux = childSnapshot.val();
+          resolve(
+           aux
+          );
+        });
+      });
+    } catch (e) {
+      reject(new ModelError("Erro: " + e));
+    }
+  });
+  return promessa;
+}
+
 
 /*r
    async obterUserPeloUid(uid) {

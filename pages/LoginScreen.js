@@ -12,8 +12,9 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function LoginScreen({navigation}) {
   const [token, setToken] = useState("");
-  const [userInfo, setUserInfo] = useState(null);
+  const [userInfo, setUserInfo] = useState(0);
   const [userMatr, setUserMatr] = useState(0);
+  
 
   const dao = new DaoUser()
   const [request, response, promptAsync] = Google.useAuthRequest({
@@ -52,8 +53,7 @@ export default function LoginScreen({navigation}) {
 
   async function incluirUsr(mtrl){
     let existeMat = await dao.verificarExisteMat(mtrl);
-    console.log(existeUid)
-    if(existeUid){
+    if(existeMat){
      
   }
   else{
@@ -71,7 +71,7 @@ export default function LoginScreen({navigation}) {
 
   return (
     <View style={styles.container}>
-      {userInfo === null ? (
+      {userInfo == 0 ? (
         <Button
           title="Sign in with Google"
           onPress={() => {

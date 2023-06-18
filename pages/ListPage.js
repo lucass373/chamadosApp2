@@ -8,9 +8,8 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function ListPage({ route, navigation }) {
   const daoCham = new DaoChamados();
-  const { id } = route.params;
+  const { id } = route.params; 
   const [chamados, setChamados] = useState([]);
-  const [auxiliares, setAuxiliares] = useState([]);
 
   useEffect(() => {
     daoCham
@@ -33,7 +32,6 @@ export default function ListPage({ route, navigation }) {
           routeProtocolo: chamado.protocolo, 
           routeNome: chamado.nome, 
           routeTecnico: chamado.tecnico,
-          routeAuxiliares: auxiliares,
           routeProblema:chamado.problema,
           routeStatus: chamado.status,
           routeSala: chamado.sala,

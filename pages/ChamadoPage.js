@@ -1,18 +1,16 @@
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
   View,
-  Button,
-  Image,
-  TouchableOpacity,
   TextInput,
   ScrollView,
+  TouchableOpacity,
 } from "react-native";
-import * as WebBrowser from "expo-web-browser";
-import * as Google from "expo-auth-session/providers/google";
+import { getDatabase,onValue, orderByChild, query, ref } from "firebase/database";
+import { init } from "../DAO/firebase";
 import DaoChamados from "../DAO/DaoChamados";
-import DaoUser from "../DAO/DaoUser"
+import DaoUser from "../DAO/DaoUser";
 
 export default function ChamadoPage({ route, navigation }) {
   const {
@@ -21,48 +19,53 @@ export default function ChamadoPage({ route, navigation }) {
     routeProtocolo,
     routeNome,
     routeTecnico,
-    routeAuxiliares,
     routeStatus,
     routeProblema,
   } = route.params;
 
-  const daoChamados = new DaoChamados()
-  const daoUser = new DaoUser()
+  const daoChamados = new DaoChamados();
+  const daoUser = new DaoUser();
+  const db = getDatabase(init);
 
   const [problema, setProblema] = useState(routeProblema);
   const [sala, setSala] = useState(routeSala);
   const [usuario, setUsuario] = useState(routeNome);
   const [tecnico, setTecnico] = useState(routeTecnico);
-  const [auxiliares, setAuxiliares] = useState(routeAuxiliares.join(" || "));
+  const [auxiliares, setAuxiliares] = useState([]);
   const [status, setStatus] = useState(routeStatus);
-  const [numAux, setNumAux] = useState([])
-  const [user, setUser] = useState({})
+  const [numAux, setNumAux] = useState(0);
+  const [user, setUser] = useState({});
 
   useEffect(() => {
-    daoChamados
-      .obterNumAux(routeProtocolo)
-      .then((num) => {
-        setNumAux(num+1);
-      })
-      .catch((error) => {
-        alert(error);
-      });
-    
-    daoUser
-    .obterUserPeloUid(routeId)
-    .then((inf)=>{
-      setUser(inf)
-    })
-    .catch((error)=>{
-      alert(error)
-    })
-
+    onValue(
+      query(ref(db, "chamados/" + routeProtocolo + "/auxiliares"), orderByChild("nome")),
+      (snapshot) => {
+        setAuxiliares([]);
+        const data = snapshot.val();
+        if (data !== null) {
+          const auxArray = Object.values(data);
+          setAuxiliares(auxArray);
+        }
+      }
+    );
   }, []);
-console.log(user)
+
+
+
+  function ItemComponent({ items }) {
+    return (
+      <View style={styles.viewAux}>
+        {items.map((item, index) => (
+          <View key={index}>
+            <Text>{item.nome} </Text>
+          </View>
+        ))}
+      </View>
+    );
+  }
+
   return (
-    <ScrollView
-      contentContainerStyle={{ alignItems: "center", paddingTop: 25 }}
-    >
+    <ScrollView contentContainerStyle={styles.container}>
       <Text style={styles.title}>Chamado: {routeProtocolo}</Text>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Problema:</Text>
@@ -102,12 +105,11 @@ console.log(user)
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Auxiliares:</Text>
-        <TextInput
-          style={styles.input}
-          placeholder="Auxiliares"
-          value={auxiliares}
-          onChangeText={setAuxiliares}
-        />
+        {auxiliares.length > 0 ? (
+          <ItemComponent items={auxiliares} />
+        ) : (
+          <Text style={styles.title}>Sem Auxiliares</Text>
+        )}
       </View>
       <View style={styles.inputContainer}>
         <Text style={styles.label}>Status:</Text>
@@ -119,26 +121,33 @@ console.log(user)
         />
       </View>
       <View style={styles.viewOpcs}>
-        {
-        routeTecnico != null ?
-        <TouchableOpacity onPress={()=>{daoChamados.incluirAuxiliar(routeProtocolo,user.nome,numAux)}} style={styles.button} >
-          <Text style={styles.buttonText}>Auxiliar chamado</Text>
-        </TouchableOpacity>:
-        <TouchableOpacity style={styles.button}>
-        <Text style={styles.buttonText}>Receber Chamado</Text>
-      </TouchableOpacity>
-    
-        }
+        {routeTecnico != null ? (
+          <TouchableOpacity
+            onPress={() => {
+              daoChamados.incluirAuxiliar(routeProtocolo, usuario.split(" ")[0], routeId);
+            }}
+            style={styles.button}
+          >
+            <Text style={styles.buttonText}>Auxiliar chamado</Text>
+          </TouchableOpacity>
+        ) : (
+          <TouchableOpacity style={styles.button}>
+            <Text style={styles.buttonText}>Receber Chamado</Text>
+          </TouchableOpacity>
+        )}
         <TouchableOpacity style={styles.button}>
           <Text style={styles.buttonText}>Excluir Chamado</Text>
         </TouchableOpacity>
       </View>
       <View style={styles.viewOpcs}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          style={styles.button}
+          onPress={() => daoChamados.alterarChamado(routeProtocolo, problema, sala)}
+        >
           <Text style={styles.buttonText}>Alterar Chamado</Text>
         </TouchableOpacity>
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Submit</Text>
+          <Text style={styles.buttonText}>Passar Chamado</Text>
         </TouchableOpacity>
       </View>
     </ScrollView>
@@ -191,6 +200,10 @@ const styles = StyleSheet.create({
     width: "100%",
     alignItems: "center",
     justifyContent: "center",
+    display: "flex",
+    flexDirection: "row",
+  },
+  viewAux: {
     display: "flex",
     flexDirection: "row",
   },
