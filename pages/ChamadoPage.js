@@ -11,6 +11,8 @@ import {
 } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
+import DaoChamados from "../DAO/DaoChamados";
+import DaoUser from "../DAO/DaoUser"
 
 export default function ChamadoPage({ route, navigation }) {
   const {
@@ -24,13 +26,39 @@ export default function ChamadoPage({ route, navigation }) {
     routeProblema,
   } = route.params;
 
+  const daoChamados = new DaoChamados()
+  const daoUser = new DaoUser()
+
   const [problema, setProblema] = useState(routeProblema);
   const [sala, setSala] = useState(routeSala);
   const [usuario, setUsuario] = useState(routeNome);
   const [tecnico, setTecnico] = useState(routeTecnico);
   const [auxiliares, setAuxiliares] = useState(routeAuxiliares.join(" || "));
   const [status, setStatus] = useState(routeStatus);
-  console.log(auxiliares);
+  const [numAux, setNumAux] = useState([])
+  const [user, setUser] = useState({})
+
+  useEffect(() => {
+    daoChamados
+      .obterNumAux(routeProtocolo)
+      .then((num) => {
+        setNumAux(num+1);
+      })
+      .catch((error) => {
+        alert(error);
+      });
+    
+    daoUser
+    .obterUserPeloUid(routeId)
+    .then((inf)=>{
+      setUser(inf)
+    })
+    .catch((error)=>{
+      alert(error)
+    })
+
+  }, []);
+console.log(user)
   return (
     <ScrollView
       contentContainerStyle={{ alignItems: "center", paddingTop: 25 }}
@@ -93,7 +121,7 @@ export default function ChamadoPage({ route, navigation }) {
       <View style={styles.viewOpcs}>
         {
         routeTecnico != null ?
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity onPress={()=>{daoChamados.incluirAuxiliar(routeProtocolo,user.nome,numAux)}} style={styles.button} >
           <Text style={styles.buttonText}>Auxiliar chamado</Text>
         </TouchableOpacity>:
         <TouchableOpacity style={styles.button}>

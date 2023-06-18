@@ -43,7 +43,6 @@ export default class DaoChamados {
   }
 
   async incluir(nome, email, chamado, data) {
-    console.log("Oi1");
     let connection = await this.obterConexao();
     const protocolo = chamado.getProtocolo().toString();
     const problema = chamado.getProblema();
@@ -54,8 +53,7 @@ export default class DaoChamados {
     let resultado = new Promise((resolve, reject) => {
       let refChamado = ref(connection, "chamados");
       runTransaction(refChamado, (chamado) => {
-        const hoje = new Date()
-        
+
         let refNewChamado = child(refChamado, protocolo);
         let setPromise = set(refNewChamado, {
           protocolo: protocolo,
@@ -65,6 +63,7 @@ export default class DaoChamados {
           sala: sala,
           data: data,
           status: status,
+        
         });
         setPromise.then(
           (value) => {
@@ -220,7 +219,7 @@ async obterChamadosFiltradoTec() {
     return new Promise((resolve, reject) => {
       snapshot.forEach((childSnapshot) => {
         const childData = childSnapshot.val();
-        filt.push(childData);
+        filt.push(childData.nome);
       });
       if (filt.length > 0) {
         resolve(filt);
@@ -229,7 +228,77 @@ async obterChamadosFiltradoTec() {
       }
     });
   }
-/*
+  async alterarTecnico(tecnico) {
+    let connection = await this.obterConexao();
+    
+    
+    return new Promise((resolve,reject)=>{
+      let refChamado = ref(connection, "chamados/"+ protocolo);
+      const updates = {
+        "tecnico": tecnico,
+      }
+      update(refChamado, updates).then(
+      resolve(true)
+      ).catch(
+      reject(false))
+    })
+  }
+
+  async incluirAuxiliar(protocolo,nome, num) {
+    let connection = await this.obterConexao();
+   
+    //--------- PROMISE --------------//
+    let resultado = new Promise((resolve, reject) => {
+      let refAuxiliar = ref(connection, "chamados/"+protocolo+"/auxiliares");
+      runTransaction(refAuxiliar, (auxiliar) => {
+
+        let refNewAuxiliar = child(refAuxiliar, num);
+        let setPromise = set(refNewAuxiliar, {
+          "num": num,
+          "nome": nome,
+        });
+        setPromise.then(
+          (value) => {
+            resolve(true);
+          },
+          (erro) => {
+            reject(erro);
+          }
+        );
+      });
+    });
+    return resultado;
+  }
+
+  async obterNumAux(protocolo) {
+    let connection = await this.obterConexao();
+    const chamadosRef = ref(connection, "chamados/"+protocolo+"/auxiliares");
+
+    const queryRef = query(
+      chamadosRef,
+      orderByChild("num"),
+      limitToLast(1)
+    );
+
+    return new Promise((resolve, reject) => {
+      get(queryRef)
+        .then((snapshot) => {
+          snapshot.forEach((childSnapshot) => {
+            const childData = childSnapshot.val();
+            resolve(childData.num);
+          });
+          // Se nenhum registro for encontrado, a função resolve com `null`
+          resolve(0);
+        })
+        .catch((error) => {
+          reject(error);
+        });
+    });
+  }
+
+  
+
+/*r
    async obterUserPeloUid(uid) {
     let connection = await this.obterConexao();
     let refUser = ref(connection, "user/");

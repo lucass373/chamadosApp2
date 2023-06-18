@@ -8,7 +8,7 @@ WebBrowser.maybeCompleteAuthSession();
 
 export default function ListPage({ route, navigation }) {
   const daoCham = new DaoChamados();
-  //const { id } = route.params; descomentar ao fim do teste
+  const { id } = route.params;
   const [chamados, setChamados] = useState([]);
   const [auxiliares, setAuxiliares] = useState([]);
 
@@ -21,11 +21,6 @@ export default function ListPage({ route, navigation }) {
       .catch((error) => {
         alert(error);
       });
-      daoCham.obterAuxiliaresFiltrado("1").then((auxList)=>{
-        setAuxiliares(auxList)
-      }).catch((error)=>{
-        alert(error)
-      })
   }, []);
 
   return (
@@ -34,7 +29,7 @@ export default function ListPage({ route, navigation }) {
       {chamados.map((chamado, index) => (
         <TouchableOpacity key={index} style={styles.itemCham}
          onPress={()=>{navigation.navigate("ChamadoPage",{
-          id : 1231654, 
+          routeId : id, 
           routeProtocolo: chamado.protocolo, 
           routeNome: chamado.nome, 
           routeTecnico: chamado.tecnico,
@@ -47,7 +42,6 @@ export default function ListPage({ route, navigation }) {
           <Text>Sala: {chamado.sala}</Text>
           <Text>Usuário: {chamado.nome}</Text>
           <Text>Técnico: {chamado.tecnico}</Text>
-          <Text>Auxiliares: {auxiliares.join(" | ")}</Text>
           <Text>Status: {chamado.status}</Text>
         </TouchableOpacity>
       ))}

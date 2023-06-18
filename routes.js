@@ -20,9 +20,8 @@ const Routes = () => {
       <AppStack.Navigator screenOptions={{headerShown: true,  animationEnabled: true}}>
         {/*** Indicando as telas das aplicação e definindo nomes para elas ***/}
         {/*** A primeira que é indicada torna-se a inicial ***/}
-        {//<AppStack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown:false }}/>       
-        //<AppStack.Screen name="TecScreen" component={TecScreen} options={{ headerShown:false }}/>
-      }
+        <AppStack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown:false }}/>       
+        <AppStack.Screen name="TecScreen" component={TecScreen} options={{ headerShown:false }}/>
         <AppStack.Screen name="ListPage" component={ListPage} options={{ headerShown:false }}/>       
         <AppStack.Screen name="ChamadoPage" component={ChamadoPage} options={{ headerShown:false }}/>       
       </AppStack.Navigator>
