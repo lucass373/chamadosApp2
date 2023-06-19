@@ -193,7 +193,7 @@ async obterChamadosFiltradoTec() {
     });
   }
   
-  async alterarChamado(protocolo, problema, sala) {
+  async alterarChamado(protocolo, problema, sala, status) {
     let connection = await this.obterConexao();
     
     
@@ -201,7 +201,8 @@ async obterChamadosFiltradoTec() {
       let refChamado = ref(connection, "chamados/"+ protocolo);
       const updates = {
         "problema": problema,
-        "sala": sala
+        "sala": sala,
+        "status": status,
       }
       update(refChamado, updates).then(()=>{
         resolve(true)
@@ -230,7 +231,7 @@ async obterChamadosFiltradoTec() {
       }
     });
   }
-  async alterarTecnico(tecnico) {
+  async alterarTecnico(tecnico,protocolo,id) {
     let connection = await this.obterConexao();
     
     
@@ -238,6 +239,7 @@ async obterChamadosFiltradoTec() {
       let refChamado = ref(connection, "chamados/"+ protocolo);
       const updates = {
         "tecnico": tecnico,
+        "idTecnico": id,
       }
       update(refChamado, updates).then(
       resolve(true)

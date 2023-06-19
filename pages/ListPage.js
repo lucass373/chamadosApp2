@@ -3,29 +3,45 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import DaoChamados from "../DAO/DaoChamados";
+import { getDatabase, onValue, orderByChild, query, ref } from "firebase/database";
+import { init } from "../DAO/firebase";
+
+
 
 WebBrowser.maybeCompleteAuthSession();
 
 export default function ListPage({ route, navigation }) {
+  const db = getDatabase(init)
   const daoCham = new DaoChamados();
   const { id } = route.params; 
   const [chamados, setChamados] = useState([]);
 
-  useEffect(() => {
-    daoCham
-      .obterChamadosFiltradoTec()
-      .then((list) => {
-        setChamados(list);
-      })
-      .catch((error) => {
-        alert(error);
-      });
-  }, []);
+   useEffect(() => {
+    onValue(
+      query(
+        ref(db, 'chamados/'),
+        orderByChild('protocolo'),
+      ),
+      (snapshot) => {
+        setChamados([])
+        const data = snapshot.val()
+        if (data !== null) {
+          const auxArray = Object.values(data)
+          setChamados(auxArray)
+        }
+      },
+    )
+  }, [])
 
+
+  
   return (
     <View style={styles.container}>
       <Text>Listar Chamados</Text>
-      {chamados.map((chamado, index) => (
+      {
+    
+      chamados.map((chamado, index) => (
+
         <TouchableOpacity key={index} style={styles.itemCham}
          onPress={()=>{navigation.navigate("ChamadoPage",{
           routeId : id, 
@@ -39,7 +55,6 @@ export default function ListPage({ route, navigation }) {
           <Text>Problema: {chamado.problema}</Text>
           <Text>Sala: {chamado.sala}</Text>
           <Text>Usuário: {chamado.nome}</Text>
-          <Text>Técnico: {chamado.tecnico}</Text>
           <Text>Status: {chamado.status}</Text>
         </TouchableOpacity>
       ))}
