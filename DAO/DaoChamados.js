@@ -254,7 +254,7 @@ async obterChamadosFiltradoTec() {
     numAux= Number(numAux) + 1
     const existe = await this.verificarExisteAux(uid,protocolo)
     //--------- PROMISE --------------//
-    let resultado = new Promise((resolve, reject) => {
+    return new Promise((resolve, reject) => {
       let refAuxiliar = ref(connection, "chamados/"+protocolo+"/auxiliares");
       runTransaction(refAuxiliar, (auxiliar) => {
 
@@ -278,7 +278,6 @@ async obterChamadosFiltradoTec() {
         }
       });
     });
-    return resultado;
   }
 
   async obterNumAux(protocolo) {

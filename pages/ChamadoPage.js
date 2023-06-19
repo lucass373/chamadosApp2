@@ -179,10 +179,11 @@ export default function ChamadoPage({ route, navigation }) {
                         routeId,
                       )
                       .then((e) => {
+                        console.log(e)
                         if (e) {
                           alert('auxiliar incluido')
                         }
-                      })
+                      }).catch((a)=>{console.log(a)})
                   }}
                   style={styles.button}
                 >
