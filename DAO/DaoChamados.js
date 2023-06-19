@@ -305,6 +305,7 @@ async obterChamadosFiltradoTec() {
     });
   }
 
+
   async verificarExisteAux(uid,protocolo) {
     let connection = await this.obterConexao();
     let refUser = ref(connection, "chamados/"+protocolo+"/auxiliares");
@@ -330,23 +331,32 @@ async obterAuxPeloUid(uid,protocolo) {
   let connection = await this.obterConexao();
   let refUser = ref(connection, "chamados/"+protocolo+"/auxiliares");
   let query1 = query(refUser, orderByChild("uid"), equalTo(uid));
-  let promessa = new Promise(function (resolve, reject) {
-    try {
+  return new Promise(function (resolve, reject) {
       onValue(query1, function (snapshot) {
         snapshot.forEach(function (childSnapshot) {
           const aux = childSnapshot.val();
-          resolve(
-           aux
-          );
+          resolve(aux);
         });
       });
-    } catch (e) {
-      reject(new ModelError("Erro: " + e));
-    }
   });
-  return promessa;
 }
 
+async excluirAux(protocolo,uid){
+    
+  let connection = await this.obterConexao();
+  let refChamado = ref(connection, "chamados/" + protocolo+"/auxiliares")
+  
+ return new Promise(async (resolve, reject) => {
+    const existe = await this.verificarExiste(protocolo)
+   if(existe){
+   remove(refChamado).then(
+    resolve(true)
+   )
+   }else{
+     alert("Auxiliar não encontrado")
+   }
+});
+}
 
 /*r
    async obterUserPeloUid(uid) {

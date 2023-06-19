@@ -50,6 +50,15 @@ export default function ChamadoPage({ route, navigation }) {
     );
   }, []);
 
+  function excluirAux(uid){
+    daoChamados.obterAuxPeloUid(uid,routeProtocolo).then((e)=>{
+      daoChamados.excluirAux(routeProtocolo,e.num).then((a)=>{
+        if(a){
+          alert("auxiliar excluido")
+        }
+      })
+    })
+  }
 
 
   function ItemComponent({ items }) {
@@ -124,7 +133,11 @@ export default function ChamadoPage({ route, navigation }) {
         {routeTecnico != null ? (
           <TouchableOpacity
             onPress={() => {
-              daoChamados.incluirAuxiliar(routeProtocolo, usuario.split(" ")[0], routeId);
+              daoChamados.incluirAuxiliar(routeProtocolo, usuario.split(" ")[0], routeId).then((e)=>{
+                if(e){
+                  alert("auxiliar incluido")
+                }
+              });
             }}
             style={styles.button}
           >
@@ -146,7 +159,7 @@ export default function ChamadoPage({ route, navigation }) {
         >
           <Text style={styles.buttonText}>Alterar Chamado</Text>
         </TouchableOpacity>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity style={styles.button} onPress={()=>excluirAux(routeId)}>
           <Text style={styles.buttonText}>Passar Chamado</Text>
         </TouchableOpacity>
       </View>
