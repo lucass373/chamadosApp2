@@ -13,7 +13,7 @@ export default function PerfilPage({route, navigation}) {
      <Text>Escolha seu perfil</Text>
         <View style={styles.viewOpc}>
           <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('TecScreen',{id: id})}}><Text>Tecnico</Text></TouchableOpacity>
-          <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate("UserPage,",{id: id})}}><Text>Usuário</Text></TouchableOpacity>
+          <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate("UserPage",{id: id})}}><Text>Usuário</Text></TouchableOpacity>
         </View>
     </View>
     
