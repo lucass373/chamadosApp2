@@ -14,6 +14,7 @@ import ChamadoPage from './pages/ChamadoPage';
 import UserListPage from './pages/UserListPage';
 import PerfilPage from './pages/PerfilPage';
 import UserPage from './pages/UserPage';
+import UserChamadoPage from './pages/UserChamadoPage';
 
 
 // Definindo as rotas através de uma função (anônima) arrow 
@@ -30,8 +31,9 @@ const Routes = () => {
         <AppStack.Screen name="UserPage" component={UserPage} options={{ headerShown:false }}/>
         <AppStack.Screen name="TecScreen" component={TecScreen} options={{ headerShown:false }}/>
         <AppStack.Screen name="ListPage" component={ListPage} options={{ headerShown:false }}/>
+        <AppStack.Screen name="ChamadoPage" component={ChamadoPage} options={{ headerShown:false }}/>
         <AppStack.Screen name="UserListPage" component={UserListPage} options={{ headerShown:false }}/>              
-        <AppStack.Screen name="ChamadoPage" component={ChamadoPage} options={{ headerShown:false }}/>       
+        <AppStack.Screen name="UserChamadoPage" component={UserChamadoPage} options={{ headerShown:false }}/>              
       </AppStack.Navigator>
     </NavigationContainer>
   );

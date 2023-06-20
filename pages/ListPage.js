@@ -3,8 +3,10 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import DaoChamados from "../DAO/DaoChamados";
+import DaoUser from "../DAO/DaoUser";
 import { getDatabase, onValue, orderByChild, query, ref } from "firebase/database";
 import { init } from "../DAO/firebase";
+import { AntDesign } from "@expo/vector-icons";
 
 
 
@@ -37,7 +39,35 @@ export default function ListPage({ route, navigation }) {
   
   return (
     <View style={styles.container}>
-      <Text>Listar Chamados</Text>
+       <View
+          style={{
+            marginLeft: 60,
+            marginBottom: 20,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{
+              backgroundColor: "gray",
+              height: 40,
+              width: 40,
+              alignItems: "center",
+              justifyContent: "center",
+              marginRight: 30,
+              borderRadius: 20,
+            }}
+          >
+            <AntDesign name="left" size={24} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.title}>Listar Chamado</Text>
+        </View>
       {
     
       chamados.map((chamado, index) => (
@@ -63,6 +93,11 @@ export default function ListPage({ route, navigation }) {
 }
 
 const styles = StyleSheet.create({
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
   container: {
     marginTop: 30,
     flex: 1,

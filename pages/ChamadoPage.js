@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState } from "react";
 import {
   StyleSheet,
   Text,
@@ -7,19 +7,20 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
-} from 'react-native'
+} from "react-native";
 import {
   getDatabase,
   onValue,
   orderByChild,
   query,
   ref,
-} from 'firebase/database'
-import { init } from '../DAO/firebase'
-import DaoChamados from '../DAO/DaoChamados'
-import DaoUser from '../DAO/DaoUser'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+} from "firebase/database";
+import { init } from "../DAO/firebase";
+import DaoChamados from "../DAO/DaoChamados";
+import DaoUser from "../DAO/DaoUser";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { AntDesign } from "@expo/vector-icons";
 
 export default function ChamadoPage({ route, navigation }) {
   const {
@@ -30,72 +31,72 @@ export default function ChamadoPage({ route, navigation }) {
     routeTecnico,
     routeStatus,
     routeProblema,
-  } = route.params
+  } = route.params;
 
-  const daoChamados = new DaoChamados()
-  const daoUser = new DaoUser()
-  const db = getDatabase(init)
+  const daoChamados = new DaoChamados();
+  const daoUser = new DaoUser();
+  const db = getDatabase(init);
 
-  const [problema, setProblema] = useState(routeProblema)
-  const [sala, setSala] = useState(routeSala)
-  const [usuario, setUsuario] = useState(routeNome)
-  const [tecnico, setTecnico] = useState('')
-  const [auxiliares, setAuxiliares] = useState([])
-  const [status, setStatus] = useState(routeStatus)
-  const [idTec, setIdTec] = useState('')
-  const [user, setUser] = useState({})
+  const [problema, setProblema] = useState(routeProblema);
+  const [sala, setSala] = useState(routeSala);
+  const [usuario, setUsuario] = useState(routeNome);
+  const [tecnico, setTecnico] = useState("");
+  const [auxiliares, setAuxiliares] = useState([]);
+  const [status, setStatus] = useState(routeStatus);
+  const [idTec, setIdTec] = useState("");
+  const [user, setUser] = useState({});
 
   useEffect(() => {
     onValue(
       query(
-        ref(db, 'chamados/' + routeProtocolo + '/auxiliares'),
-        orderByChild('nome'),
+        ref(db, "chamados/" + routeProtocolo + "/auxiliares"),
+        orderByChild("nome")
       ),
       (snapshot) => {
-        setAuxiliares([])
-        const data = snapshot.val()
+        setAuxiliares([]);
+        const data = snapshot.val();
         if (data !== null) {
-          const auxArray = Object.values(data)
-          setAuxiliares(auxArray)
+          const auxArray = Object.values(data);
+          setAuxiliares(auxArray);
         }
-      },
-    )
-  }, [])
+      }
+    );
+  }, []);
 
   useEffect(() => {
     onValue(
-      query(ref(db, 'chamados/' + routeProtocolo), orderByChild('tecnico')),
+      query(ref(db, "chamados/" + routeProtocolo), orderByChild("tecnico")),
       (snapshot) => {
-        setTecnico(snapshot.val().tecnico)
-        setIdTec(snapshot.val().idTecnico)
-      },
-    )
-  }, [])
+        setTecnico(snapshot.val().tecnico);
+        setIdTec(snapshot.val().idTecnico);
+      }
+    );
+  }, []);
 
   function excluirAux(uid) {
     daoChamados.obterAuxPeloUid(uid, routeProtocolo).then((e) => {
       daoChamados.excluirAux(routeProtocolo, e.num).then((a) => {
         if (a) {
-          alert('auxiliar excluido')
-        }else{
-          alert("auxiliar nao encontrado")
+          alert("auxiliar excluido");
+        } else {
+          alert("auxiliar nao encontrado");
         }
-      })
-    })
+      });
+    });
   }
 
   async function incluirTec() {
-    const inf = await daoUser.obterUserPeloUid(routeId)
+    const inf = await daoUser.obterUserPeloUid(routeId);
     daoChamados
       .alterarTecnico(inf.nome, routeProtocolo, routeId)
-      .then(alert('tecnico incluído com sucesso'))
+      .then(alert("tecnico incluído com sucesso"));
   }
 
   async function excluirTec() {
-    const inf = await daoUser.obterUserPeloUid(routeId)
+    const inf = await daoUser.obterUserPeloUid(routeId);
     daoChamados
       .alterarTecnico(null, routeProtocolo, null)
-      .then(alert('tecnico removido com sucesso'))
+      .then(alert("tecnico removido com sucesso"));
   }
 
   function ItemComponent({ items }) {
@@ -107,7 +108,7 @@ export default function ChamadoPage({ route, navigation }) {
           </View>
         ))}
       </View>
-    )
+    );
   }
 
   return (
@@ -116,7 +117,35 @@ export default function ChamadoPage({ route, navigation }) {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
-        <Text style={styles.title}>Chamado: {routeProtocolo}</Text>
+        <View
+          style={{
+            marginLeft: 60,
+            marginBottom: 20,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{
+              backgroundColor: "gray",
+              height: 40,
+              width: 40,
+              alignItems: "center",
+              justifyContent: "center",
+              marginRight: 30,
+              borderRadius: 20,
+            }}
+          >
+            <AntDesign name="left" size={24} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.title}>Chamado: {routeProtocolo}</Text>
+        </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Problema:</Text>
           <TextInput
@@ -176,14 +205,17 @@ export default function ChamadoPage({ route, navigation }) {
                     daoChamados
                       .incluirAuxiliar(
                         routeProtocolo,
-                        usuario.split(' ')[0],
-                        routeId,
+                        usuario.split(" ")[0],
+                        routeId
                       )
                       .then((e) => {
                         if (e) {
-                          alert('auxiliar incluido')
+                          alert("auxiliar incluido");
                         }
-                      }).catch((a)=>{console.log(a)})
+                      })
+                      .catch((a) => {
+                        console.log(a);
+                      });
                   }}
                   style={styles.button}
                 >
@@ -193,7 +225,7 @@ export default function ChamadoPage({ route, navigation }) {
                 <TouchableOpacity
                   style={styles.button}
                   onPress={() => {
-                    incluirTec()
+                    incluirTec();
                   }}
                 >
                   <Text style={styles.buttonText}>Receber Chamado</Text>
@@ -217,70 +249,72 @@ export default function ChamadoPage({ route, navigation }) {
           </TouchableOpacity>
           <TouchableOpacity
             style={styles.button}
-            onPress={() =>{idTec == routeId ? excluirTec(): excluirAux(routeId)}}
+            onPress={() => {
+              idTec == routeId ? excluirTec() : excluirAux(routeId);
+            }}
           >
             <Text style={styles.buttonText}>Desistir do Chamado</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
     </SafeAreaView>
-  )
+  );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    backgroundColor: '#fff',
+    backgroundColor: "#fff",
   },
   contentContainer: {
     flexGrow: 1,
-    alignItems: 'center',
+    alignItems: "center",
     paddingTop: 25,
   },
   title: {
     fontSize: 24,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 5,
   },
   inputContainer: {
     marginBottom: 16,
-    width: '80%',
+    width: "80%",
   },
   label: {
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
     marginBottom: 8,
   },
   input: {
     borderWidth: 1,
-    borderColor: '#ccc',
+    borderColor: "#ccc",
     borderRadius: 8,
     padding: 5,
   },
   button: {
-    backgroundColor: 'blue',
+    backgroundColor: "blue",
     height: 40,
     width: 150,
     borderRadius: 8,
     marginTop: 10,
     marginRight: 5,
-    alignItems: 'center',
-    justifyContent: 'center',
+    alignItems: "center",
+    justifyContent: "center",
   },
   buttonText: {
-    color: '#fff',
+    color: "#fff",
     fontSize: 16,
-    fontWeight: 'bold',
+    fontWeight: "bold",
   },
   viewOpcs: {
-    width: '100%',
-    alignItems: 'center',
-    justifyContent: 'center',
-    display: 'flex',
-    flexDirection: 'row',
+    width: "100%",
+    alignItems: "center",
+    justifyContent: "center",
+    display: "flex",
+    flexDirection: "row",
   },
   viewAux: {
-    display: 'flex',
-    flexDirection: 'row',
+    display: "flex",
+    flexDirection: "row",
   },
-})
+});
