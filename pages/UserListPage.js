@@ -3,9 +3,10 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import DaoChamados from "../DAO/DaoChamados";
+import DaoUser from "../DAO/DaoUser";
 import { equalTo, getDatabase, onValue, orderByChild, query, ref } from "firebase/database";
 import { init } from "../DAO/firebase";
-
+import { AntDesign } from '@expo/vector-icons'; 
 
 
 WebBrowser.maybeCompleteAuthSession();
@@ -13,17 +14,25 @@ WebBrowser.maybeCompleteAuthSession();
 export default function UserListPage({ route, navigation }) {
   const db = getDatabase(init)
   const daoCham = new DaoChamados();
+  const daoUser = new DaoUser();
   const { id } = route.params; 
   const [chamados, setChamados] = useState([]);
+  const [email, setEmail] = useState("");
 
+  async function obterUser(){
+    const promisse = await daoUser.obterUserPeloUid(id)
+    setEmail(promisse.email)
+  }
+  obterUser();
    useEffect(() => {
     onValue(
       query(
         ref(db, 'chamados/'),
-        orderByChild('email'),equalTo("lucas.silvadeoliveira@soulasalle.com.br")
+        orderByChild('email'),equalTo(email)
       ),
       (snapshot) => {
         setChamados([])
+       
         const data = snapshot.val()
         if (data !== null) {
           const auxArray = Object.values(data)
@@ -31,19 +40,47 @@ export default function UserListPage({ route, navigation }) {
         }
       },
     )
-  }, [])
+  }, [email])
 
 
   
   return (
     <View style={styles.container}>
-      <Text>Listar Meus Chamados</Text>
+       <View
+          style={{
+            marginLeft: 60,
+            marginBottom: 20,
+            display: "flex",
+            flexDirection: "row",
+            justifyContent: "flex-start",
+            width: "100%",
+            alignItems: "center",
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => {
+              navigation.goBack();
+            }}
+            style={{
+              backgroundColor: "gray",
+              height: 40,
+              width: 40,
+              alignItems: "center",
+              justifyContent: "center",
+              marginRight: 30,
+              borderRadius: 20,
+            }}
+          >
+            <AntDesign name="left" size={24} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.title}>Listar Meus Chamados</Text>
+        </View>
       {
     
       chamados.map((chamado, index) => (
 
         <TouchableOpacity key={index} style={styles.itemCham}
-         onPress={()=>{navigation.navigate("ChamadoPage",{
+         onPress={()=>{navigation.navigate("UserChamadoPage",{
           routeId : id, 
           routeProtocolo: chamado.protocolo, 
           routeNome: chamado.nome, 
@@ -74,5 +111,10 @@ const styles = StyleSheet.create({
     width: "90%",
     marginBottom: 10,
     padding: 10,
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 5,
   },
 });
