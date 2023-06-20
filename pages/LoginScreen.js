@@ -44,7 +44,7 @@ export default function LoginScreen({navigation}) {
 
       if(existeUid){
         console.log(existeUid)
-        navigation.navigate("TecScreen",{id: user.id})
+        navigation.navigate("PerfilPage",{id: user.id})
       }
     } catch (error) {
       console.log(error)
@@ -63,7 +63,7 @@ export default function LoginScreen({navigation}) {
     }else{
     let nUser = new User(userInfo.id,userInfo.email,userInfo.name,"Tec",false, mtrl)
     dao.incluir(nUser)
-    navigation.navigate("TecScreen",{id: userInfo.id})
+    navigation.navigate("PerfilPage",{id: userInfo.id})
     }
   }
   }

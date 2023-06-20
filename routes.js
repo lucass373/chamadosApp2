@@ -11,6 +11,11 @@ import LoginScreen from "./pages/LoginScreen"
 import TecScreen from './pages/TecScreen';
 import ListPage from './pages/ListPage';
 import ChamadoPage from './pages/ChamadoPage';
+import UserListPage from './pages/UserListPage';
+import PerfilPage from './pages/perfilPAge';
+import UserPage from './pages/UserPage';
+
+
 // Definindo as rotas através de uma função (anônima) arrow 
 const Routes = () => {
   return (
@@ -21,8 +26,11 @@ const Routes = () => {
         {/*** Indicando as telas das aplicação e definindo nomes para elas ***/}
         {/*** A primeira que é indicada torna-se a inicial ***/}
         <AppStack.Screen name="LoginScreen" component={LoginScreen} options={{ headerShown:false }}/>       
+        <AppStack.Screen name="PerfilPage" component={PerfilPage} options={{ headerShown:false }}/>       
+        <AppStack.Screen name="UserPage" component={UserPage} options={{ headerShown:false }}/>
         <AppStack.Screen name="TecScreen" component={TecScreen} options={{ headerShown:false }}/>
-        <AppStack.Screen name="ListPage" component={ListPage} options={{ headerShown:false }}/>       
+        <AppStack.Screen name="ListPage" component={ListPage} options={{ headerShown:false }}/>
+        <AppStack.Screen name="UserListPage" component={UserListPage} options={{ headerShown:false }}/>              
         <AppStack.Screen name="ChamadoPage" component={ChamadoPage} options={{ headerShown:false }}/>       
       </AppStack.Navigator>
     </NavigationContainer>
