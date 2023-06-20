@@ -3,7 +3,7 @@ import { StyleSheet, Text, View, TouchableOpacity } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import DaoChamados from "../DAO/DaoChamados";
-import { getDatabase, onValue, orderByChild, query, ref } from "firebase/database";
+import { equalTo, getDatabase, onValue, orderByChild, query, ref } from "firebase/database";
 import { init } from "../DAO/firebase";
 
 
@@ -20,7 +20,7 @@ export default function UserListPage({ route, navigation }) {
     onValue(
       query(
         ref(db, 'chamados/'),
-        orderByChild('protocolo'),equalTo("lucas.silvadeoliveira@soulasalle.com.br")
+        orderByChild('email'),equalTo("lucas.silvadeoliveira@soulasalle.com.br")
       ),
       (snapshot) => {
         setChamados([])

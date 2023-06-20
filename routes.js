@@ -12,7 +12,7 @@ import TecScreen from './pages/TecScreen';
 import ListPage from './pages/ListPage';
 import ChamadoPage from './pages/ChamadoPage';
 import UserListPage from './pages/UserListPage';
-import PerfilPage from './pages/perfilPAge';
+import PerfilPage from './pages/PerfilPage';
 import UserPage from './pages/UserPage';
 
 
