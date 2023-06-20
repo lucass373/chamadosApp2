@@ -179,10 +179,8 @@ async obterChamadosFiltradoTec() {
         .then((snapshot) => {
           // verifica se o valor existe no nó
           if (snapshot.val() !== null) {
-            console.log("existo");
             resolve(true);
           } else {
-            console.log("nao existo");
             resolve(false);
           }
         })
@@ -342,10 +340,10 @@ async obterAuxPeloUid(uid,protocolo) {
   });
 }
 
-async excluirAux(protocolo,uid){
+async excluirAux(protocolo,num){
     
   let connection = await this.obterConexao();
-  let refChamado = ref(connection, "chamados/" + protocolo+"/auxiliares")
+  let refChamado = ref(connection, "chamados/" + protocolo+"/auxiliares/"+ num)
   
  return new Promise(async (resolve, reject) => {
     const existe = await this.verificarExiste(protocolo)

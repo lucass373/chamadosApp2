@@ -73,11 +73,12 @@ export default function ChamadoPage({ route, navigation }) {
   }, [])
 
   function excluirAux(uid) {
-    console.log("aaaaaa")
     daoChamados.obterAuxPeloUid(uid, routeProtocolo).then((e) => {
       daoChamados.excluirAux(routeProtocolo, e.num).then((a) => {
         if (a) {
           alert('auxiliar excluido')
+        }else{
+          alert("auxiliar nao encontrado")
         }
       })
     })
@@ -102,7 +103,7 @@ export default function ChamadoPage({ route, navigation }) {
       <View style={styles.viewAux}>
         {items.map((item, index) => (
           <View key={index}>
-            <Text>{item.nome} </Text>
+            <Text>{item.nome} ||</Text>
           </View>
         ))}
       </View>
@@ -179,7 +180,6 @@ export default function ChamadoPage({ route, navigation }) {
                         routeId,
                       )
                       .then((e) => {
-                        console.log(e)
                         if (e) {
                           alert('auxiliar incluido')
                         }
