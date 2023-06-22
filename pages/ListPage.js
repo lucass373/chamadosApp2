@@ -5,7 +5,7 @@ import * as Google from "expo-auth-session/providers/google";
 import DaoChamados from "../DAO/DaoChamados";
 import { getDatabase, onValue, orderByChild, query, ref } from "firebase/database";
 import { init } from "../DAO/firebase";
-
+import { AntDesign } from '@expo/vector-icons'
 
 
 WebBrowser.maybeCompleteAuthSession();
@@ -37,7 +37,24 @@ export default function ListPage({ route, navigation }) {
   
   return (
     <View style={styles.container}>
-      <Text>Listar Chamados</Text>
+      <View
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginLeft: 70,
+            marginBottom: 20,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{ marginRight: 30 }}
+          >
+            <AntDesign name="leftcircle" size={30} color="black" />
+          </TouchableOpacity>
+          <Text style={styles.title}>Listar Chamados</Text>
+        </View>
       {
     
       chamados.map((chamado, index) => (
@@ -75,4 +92,10 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     padding: 10,
   },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
+
 });

@@ -22,7 +22,7 @@ import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { AntDesign } from '@expo/vector-icons'
 
-export default function ChamadoPage({ route, navigation }) {
+export default function UserChamadoPage({ route, navigation }) {
   const {
     routeId,
     routeSala,
@@ -78,8 +78,8 @@ export default function ChamadoPage({ route, navigation }) {
       daoChamados.excluirAux(routeProtocolo, e.num).then((a) => {
         if (a) {
           alert('auxiliar excluido')
-        }else{
-          alert("auxiliar nao encontrado")
+        } else {
+          alert('auxiliar nao encontrado')
         }
       })
     })
@@ -124,7 +124,6 @@ export default function ChamadoPage({ route, navigation }) {
             flexDirection: 'row',
             alignItems: 'center',
             marginLeft: 70,
-            marginBottom: 20,
           }}
         >
           <TouchableOpacity
@@ -176,50 +175,9 @@ export default function ChamadoPage({ route, navigation }) {
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Status:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Status"
-            value={status}
-            onChangeText={setStatus}
-          />
+          <Text>{status}</Text>
         </View>
         <View style={styles.viewOpcs}>
-          {idTec == routeId ? (
-            <></>
-          ) : (
-            <>
-              {tecnico != null ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    daoChamados
-                      .incluirAuxiliar(
-                        routeProtocolo,
-                        usuario.split(' ')[0],
-                        routeId,
-                      )
-                      .then((e) => {
-                        if (e) {
-                          alert('auxiliar incluido')
-                        }
-                      }).catch((a)=>{console.log(a)})
-                  }}
-                  style={styles.button}
-                >
-                  <Text style={styles.buttonText}>Auxiliar chamado</Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => {
-                    incluirTec()
-                  }}
-                >
-                  <Text style={styles.buttonText}>Receber Chamado</Text>
-                </TouchableOpacity>
-              )}
-            </>
-          )}
-
           <TouchableOpacity style={styles.button}>
             <Text style={styles.buttonText}>Excluir Chamado</Text>
           </TouchableOpacity>
@@ -232,12 +190,6 @@ export default function ChamadoPage({ route, navigation }) {
             }
           >
             <Text style={styles.buttonText}>Alterar Chamado</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>{idTec == routeId ? excluirTec(): excluirAux(routeId)}}
-          >
-            <Text style={styles.buttonText}>Desistir do Chamado</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>
