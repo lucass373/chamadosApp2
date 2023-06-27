@@ -7,6 +7,7 @@ import {
   ScrollView,
   TouchableOpacity,
   SafeAreaView,
+  Button,
 } from 'react-native'
 import {
   getDatabase,
@@ -16,90 +17,66 @@ import {
   ref,
 } from 'firebase/database'
 import { init } from '../DAO/firebase'
+import Chamado from '../classes/Chamados'
 import DaoChamados from '../DAO/DaoChamados'
 import DaoUser from '../DAO/DaoUser'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { AntDesign } from '@expo/vector-icons'
 
-export default function UserChamadoPage({ route, navigation }) {
+export default function ChamadoFormPage({ route, navigation }) {
   const {
-    routeId,
-    routeSala,
-    routeProtocolo,
-    routeNome,
-    routeTecnico,
-    routeStatus,
-    routeProblema,
+    id,
   } = route.params
 
   const daoChamados = new DaoChamados()
   const daoUser = new DaoUser()
   const db = getDatabase(init)
 
-  const [problema, setProblema] = useState(routeProblema)
-  const [sala, setSala] = useState(routeSala)
-  const [usuario, setUsuario] = useState(routeNome)
+  const [problema, setProblema] = useState(null)
+  const [sala, setSala] = useState(null)
+  const [user, setUser] = useState('')
+  const [email, setEmail] = useState('')
   const [tecnico, setTecnico] = useState('')
   const [auxiliares, setAuxiliares] = useState([])
-  const [status, setStatus] = useState(routeStatus)
+  const [status, setStatus] = useState(null)
   const [idTec, setIdTec] = useState('')
-  const [excluindo, setExcluindo] = useState(0)
+
+
 
   useEffect(() => {
     onValue(
-      query(
-        ref(db, 'chamados/' + routeProtocolo + '/auxiliares'),
-        orderByChild('nome'),
-      ),
+      query(ref(db, 'user/' + id), orderByChild('nome')),
       (snapshot) => {
-        setAuxiliares([])
-        const data = snapshot.val()
-        if (data !== null) {
-          const auxArray = Object.values(data)
-          setAuxiliares(auxArray)
-        }
+        setUser(snapshot.val().nome)
+        setEmail(snapshot.val().email)
       },
     )
-  }, [])
+  }, [id])
 
-  useEffect(() => {
-    onValue(
-      query(ref(db, 'chamados/' + routeProtocolo), orderByChild('tecnico')),
-      (snapshot) => {
-        console.log(excluindo)
-        if(snapshot && snapshot.exists() && excluindo === 0){
-          console.log("setting")
-          setTecnico(snapshot.val().tecnico)
-          setIdTec(snapshot.val().idTecnico)
-        }
-      },
+
+async function incluir(){
+    const prot = await daoChamados.obterProt()
+    const newProt = Number(prot) + 1;
+    let chamado = new Chamado(newProt,problema,sala,null)
+    let hoje = new Date()
+    const dia = hoje.getDay() < 9? "0"+hoje.getDay() : hoje.getDay()   // O dia do mês
+    const ano = hoje.getFullYear() // O ano com quatro dígitos
+    const hora = hoje.getHours() < 9? "0"+hoje.getHours() : hoje.getHours()// A hora do dia
+    const min = hoje.getMinutes() < 9? "0"+hoje.getMinutes() : hoje.getMinutes()  // O número de minutos desde a última hora
+    const mes = hoje.getMonth() < 9? "0"+hoje.getMonth() : hoje.getMonth()// o mês do ano
+    const dataComp = `${dia}/${mes}/${ano} ${hora}:${min}`
+    
+    daoChamados.incluir(user, email, chamado, dataComp).then(
+        alert("Chamado incluído com sucesso!!"),
+        setProblema(""),
+        setSala(""),
     )
-  }, [excluindo])
+
+}
 
 
-  async function excluirChamado(id){
-    setExcluindo(1)
-    await daoChamados.excluirChamado(id).then(e=>
-      alert(e),
-      navigation.goBack()
-    ).catch(a=>{
-      alert(a)
-    })
-  }
- 
-
-  function ItemComponent({ items }) {
-    return (
-      <View style={styles.viewAux}>
-        {items.map((item, index) => (
-          <View key={index}>
-            <Text>{item.nome} ||</Text>
-          </View>
-        ))}
-      </View>
-    )
-  }
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -114,6 +91,7 @@ export default function UserChamadoPage({ route, navigation }) {
             flexDirection: 'row',
             alignItems: 'center',
             marginLeft: 70,
+            marginBottom: 20,
           }}
         >
           <TouchableOpacity
@@ -122,7 +100,7 @@ export default function UserChamadoPage({ route, navigation }) {
           >
             <AntDesign name="leftcircle" size={30} color="black" />
           </TouchableOpacity>
-          <Text style={styles.title}>Chamado: {routeProtocolo}</Text>
+          <Text style={styles.title}>Abrir Chamado</Text>
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Problema:</Text>
@@ -144,42 +122,14 @@ export default function UserChamadoPage({ route, navigation }) {
         </View>
         <View style={styles.inputContainer}>
           <Text style={styles.label}>Usuário:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Usuário"
-            value={usuario}
-            onChangeText={setUsuario}
-          />
+          <Text>{user}</Text>
         </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Técnico:</Text>
-          {tecnico != null ? <Text>{tecnico}</Text> : <Text>Sem Técnico</Text>}
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Auxiliares:</Text>
-          {auxiliares.length > 0 ? (
-            <ItemComponent items={auxiliares} />
-          ) : (
-            <Text style={styles.title}>Sem Auxiliares</Text>
-          )}
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Status:</Text>
-          <Text>{status}</Text>
-        </View>
+      
+       
+       
         <View style={styles.viewOpcs}>
-          <TouchableOpacity onPress={()=>{[excluirChamado(routeProtocolo)]}} style={styles.button}>
-            <Text style={styles.buttonText}>Excluir Chamado</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.viewOpcs}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              daoChamados.alterarChamado(routeProtocolo, problema, sala, status)
-            }
-          >
-            <Text style={styles.buttonText}>Alterar Chamado</Text>
+        <TouchableOpacity onPress={()=> incluir()} style={styles.button}>
+            <Text style={styles.buttonText}>Abrir Chamado</Text>
           </TouchableOpacity>
         </View>
       </KeyboardAwareScrollView>

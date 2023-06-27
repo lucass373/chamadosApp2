@@ -23,7 +23,6 @@ export default function UserListPage({ route, navigation }) {
   async function obterChamados(){
     const promisse = await daoUser.obterUserPeloUid(id)
     setEmail(promisse.email)
-    console.log(promisse.email)
   }
 
   obterChamados()
