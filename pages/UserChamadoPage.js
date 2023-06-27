@@ -42,7 +42,7 @@ export default function UserChamadoPage({ route, navigation }) {
   const [usuario, setUsuario] = useState(routeNome)
   const [tecnico, setTecnico] = useState('')
   const [auxiliares, setAuxiliares] = useState([])
-  const [status, setStatus] = useState(routeStatus)
+  const [status, setStatus] = useState('')
   const [idTec, setIdTec] = useState('')
   const [excluindo, setExcluindo] = useState(0)
 
@@ -64,17 +64,23 @@ export default function UserChamadoPage({ route, navigation }) {
   }, [])
 
   useEffect(() => {
+    if(excluindo === 0){
+      console.log(excluindo)
     onValue(
       query(ref(db, 'chamados/' + routeProtocolo), orderByChild('tecnico')),
       (snapshot) => {
-        console.log(excluindo)
-        if(snapshot && snapshot.exists() && excluindo === 0){
+        
+        
           console.log("setting")
           setTecnico(snapshot.val().tecnico)
           setIdTec(snapshot.val().idTecnico)
+          setStatus(snapshot.val().status)
         }
-      },
+      
     )
+      }else{
+        console.log("exclui")
+      }
   }, [excluindo])
 
 

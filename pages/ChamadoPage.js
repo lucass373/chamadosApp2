@@ -42,7 +42,7 @@ export default function ChamadoPage({ route, navigation }) {
   const [usuario, setUsuario] = useState(routeNome)
   const [tecnico, setTecnico] = useState('')
   const [auxiliares, setAuxiliares] = useState([])
-  const [status, setStatus] = useState(routeStatus)
+  const [status, setStatus] = useState('')
   const [idTec, setIdTec] = useState('')
   const [user, setUser] = useState({})
 
@@ -69,6 +69,7 @@ export default function ChamadoPage({ route, navigation }) {
       (snapshot) => {
         setTecnico(snapshot.val().tecnico)
         setIdTec(snapshot.val().idTecnico)
+        setStatus(snapshot.val().status)
       },
     )
   }, [])
