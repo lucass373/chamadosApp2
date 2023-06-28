@@ -1,0 +1,50 @@
+{
+  "chamados": [
+    null,
+    {
+      "data": "03/05/2023 19:9",
+      "email": "lucass3012@gmail.com",
+      "nome": "Lucas Silva",
+      "problema": "Teste",
+      "protocolo": "1",
+      "sala": "Teste"
+    },
+    {
+      "auxiliares": [
+        null,
+        {
+          "nome": "Lucas",
+          "num": 1,
+          "uid": "113950618042465354431"
+        }
+      ],
+      "data": "03/05/2023 19:48",
+      "email": "lucass3012@gmail.com",
+      "idTecnico": "100447555061504827311",
+      "nome": "Lucas Silva",
+      "problema": "Sem internet",
+      "protocolo": "2",
+      "sala": "410",
+      "status": "Em analise",
+      "tecnico": "Lucas Silva de Oliveira"
+    }
+  ],
+  "user": {
+    "100447555061504827311": {
+      "ativo": false,
+      "email": "lucas.silvadeoliveira@soulasalle.com.br",
+      "matricula": "10",
+      "nome": "Lucas Silva de Oliveira",
+      "perfil": "Tec",
+      "uid": "100447555061504827311"
+    },
+    "113950618042465354431": {
+      "ativo": false,
+      "email": "lucass3012@gmail.com",
+      "matricula": "1",
+      "nome": "Lucas Silva",
+      "perfil": "Tec",
+      "uid": "113950618042465354431"
+    }
+  }
+}
