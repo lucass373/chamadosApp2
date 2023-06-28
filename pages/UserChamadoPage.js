@@ -20,15 +20,6 @@ import DaoChamados from '../DAO/DaoChamados'
 import DaoUser from '../DAO/DaoUser'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-<<<<<<< HEAD
-import { AntDesign } from '@expo/vector-icons'; 
-
-export default function UserChamadoPage({ route, navigation }) {
-  const {
-    routeSala,
-    routeProtocolo,
-    routeNome,
-=======
 import { AntDesign } from '@expo/vector-icons'
 
 export default function UserChamadoPage({ route, navigation }) {
@@ -38,7 +29,6 @@ export default function UserChamadoPage({ route, navigation }) {
     routeProtocolo,
     routeNome,
     routeTecnico,
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
     routeStatus,
     routeProblema,
   } = route.params
@@ -54,11 +44,7 @@ export default function UserChamadoPage({ route, navigation }) {
   const [auxiliares, setAuxiliares] = useState([])
   const [status, setStatus] = useState('')
   const [idTec, setIdTec] = useState('')
-<<<<<<< HEAD
-  const [user, setUser] = useState({})
-=======
   const [excluindo, setExcluindo] = useState(0)
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
 
   useEffect(() => {
     onValue(
@@ -78,23 +64,6 @@ export default function UserChamadoPage({ route, navigation }) {
   }, [])
 
   useEffect(() => {
-<<<<<<< HEAD
-    onValue(
-      query(ref(db, 'chamados/' + routeProtocolo), orderByChild('tecnico')),
-      (snapshot) => {
-        setStatus(snapshot.val().status)
-        setTecnico(snapshot.val().tecnico)
-        setIdTec(snapshot.val().idTecnico)
-      },
-    )
-  }, [])
-
- 
-
-  
-  
-
-=======
     if(excluindo === 0){
       console.log(excluindo)
     onValue(
@@ -126,7 +95,6 @@ export default function UserChamadoPage({ route, navigation }) {
   }
  
 
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
   function ItemComponent({ items }) {
     return (
       <View style={styles.viewAux}>
@@ -145,34 +113,6 @@ export default function UserChamadoPage({ route, navigation }) {
         style={styles.container}
         contentContainerStyle={styles.contentContainer}
       >
-<<<<<<< HEAD
-         <View
-          style={{
-            marginLeft: 60,
-            marginBottom: 20,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            width: "100%",
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-            style={{
-              backgroundColor: "gray",
-              height: 40,
-              width: 40,
-              alignItems: "center",
-              justifyContent: "center",
-              marginRight: 30,
-              borderRadius: 20,
-            }}
-          >
-            <AntDesign name="left" size={24} color="black" />
-=======
         <View
           style={{
             width: '100%',
@@ -187,7 +127,6 @@ export default function UserChamadoPage({ route, navigation }) {
             style={{ marginRight: 30 }}
           >
             <AntDesign name="leftcircle" size={30} color="black" />
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
           </TouchableOpacity>
           <Text style={styles.title}>Chamado: {routeProtocolo}</Text>
         </View>
@@ -235,11 +174,7 @@ export default function UserChamadoPage({ route, navigation }) {
           <Text>{status}</Text>
         </View>
         <View style={styles.viewOpcs}>
-<<<<<<< HEAD
-          <TouchableOpacity style={styles.button}>
-=======
           <TouchableOpacity onPress={()=>{[excluirChamado(routeProtocolo)]}} style={styles.button}>
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
             <Text style={styles.buttonText}>Excluir Chamado</Text>
           </TouchableOpacity>
         </View>
