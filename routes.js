@@ -33,8 +33,8 @@ const Routes = () => {
         <AppStack.Screen name="TecScreen" component={TecScreen} options={{ headerShown:false }}/>
         <AppStack.Screen name="ListPage" component={ListPage} options={{ headerShown:false }}/>
         <AppStack.Screen name="UserListPage" component={UserListPage} options={{ headerShown:false }}/>    
+        <AppStack.Screen name="ChamadoPage" component={ChamadoPage} options={{ headerShown:false }}/> 
         <AppStack.Screen name="UserChamadoPage" component={UserChamadoPage} options={{ headerShown:false }}/>              
-        <AppStack.Screen name="ChamadoPage" component={ChamadoPage} options={{ headerShown:false }}/>       
         <AppStack.Screen name="ChamadoFormPage" component={ChamadoFormPage} options={{ headerShown:false }}/>       
       </AppStack.Navigator>
     </NavigationContainer>

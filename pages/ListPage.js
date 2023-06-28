@@ -66,6 +66,7 @@ export default function ListPage({ route, navigation }) {
           routeProtocolo: chamado.protocolo, 
           routeNome: chamado.nome, 
           routeTecnico: chamado.tecnico,
+          routeIdTecnico: chamado.idTecnico,
           routeProblema:chamado.problema,
           routeStatus: chamado.status,
           routeSala: chamado.sala,

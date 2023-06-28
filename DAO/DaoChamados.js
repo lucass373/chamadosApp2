@@ -156,7 +156,7 @@ async obterChamadosFiltradoTec() {
     
     let connection = await this.obterConexao();
     let refChamado = ref(connection, "chamados/" + protocolo)
-    
+    console.log("a")
    return new Promise(async (resolve, reject) => {
       const existe = await this.verificarExiste(protocolo)
      if(existe){
@@ -206,8 +206,7 @@ async obterChamadosFiltradoTec() {
         resolve(true)
         alert("Chamado Alterado com sucesso!")
       }
-      ).catch(
-      reject(false))
+      )
     })
   }
     

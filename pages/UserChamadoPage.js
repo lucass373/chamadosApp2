@@ -21,6 +21,7 @@ import DaoUser from '../DAO/DaoUser'
 import { SafeAreaProvider } from 'react-native-safe-area-context'
 import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
 import { AntDesign } from '@expo/vector-icons'
+import { CommonActions } from '@react-navigation/native';
 
 export default function UserChamadoPage({ route, navigation }) {
   const {
@@ -29,6 +30,7 @@ export default function UserChamadoPage({ route, navigation }) {
     routeProtocolo,
     routeNome,
     routeTecnico,
+    routeIdTecnico,
     routeStatus,
     routeProblema,
   } = route.params
@@ -40,10 +42,10 @@ export default function UserChamadoPage({ route, navigation }) {
   const [problema, setProblema] = useState(routeProblema)
   const [sala, setSala] = useState(routeSala)
   const [usuario, setUsuario] = useState(routeNome)
-  const [tecnico, setTecnico] = useState('')
+  const [tecnico, setTecnico] = useState(routeTecnico)
   const [auxiliares, setAuxiliares] = useState([])
-  const [status, setStatus] = useState('')
-  const [idTec, setIdTec] = useState('')
+  const [status, setStatus] = useState(routeStatus)
+  const [idTec, setIdTec] = useState(routeIdTecnico)
   const [excluindo, setExcluindo] = useState(0)
 
   useEffect(() => {
@@ -62,28 +64,18 @@ export default function UserChamadoPage({ route, navigation }) {
       },
     )
   }, [])
-
-  useEffect(() => {
-    onValue(
-      query(ref(db, 'chamados/' + routeProtocolo), orderByChild('tecnico')),
-      (snapshot) => {
-        try{
-          setTecnico(snapshot.val().tecnico)
-          setIdTec(snapshot.val().idTecnico)
-          setStatus(snapshot.val().status)
-        }
-        catch{
-
-        }
-      },
-    )
-  }, [])
-
+  
 
   async function excluirChamado(id){
     await daoChamados.excluirChamado(id).then(e=>
       alert(e),
-      navigation.navigate("UserPage",{id: routeId})
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            { name: 'PerfilPage', params:{ id: routeId} }],
+        })
+      )
     ).catch(a=>{
       alert(a)
     })
@@ -101,7 +93,9 @@ export default function UserChamadoPage({ route, navigation }) {
       </View>
     )
   }
-
+if(status === undefined){
+  setStatus("")
+}
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAwareScrollView
@@ -169,15 +163,17 @@ export default function UserChamadoPage({ route, navigation }) {
           <Text>{status}</Text>
         </View>
         <View style={styles.viewOpcs}>
-          <TouchableOpacity onPress={()=>{[setExcluindo(1),excluirChamado(routeProtocolo)]}} style={styles.button}>
+          <TouchableOpacity onPress={()=>{excluirChamado(routeProtocolo)}} style={styles.button}>
             <Text style={styles.buttonText}>Excluir Chamado</Text>
           </TouchableOpacity>
         </View>
         <View style={styles.viewOpcs}>
           <TouchableOpacity
             style={styles.button}
-            onPress={() =>
+            onPress={() =>[
               daoChamados.alterarChamado(routeProtocolo, problema, sala, status)
+              ,setProblema(problema), setSala(sala)
+            ]
             }
           >
             <Text style={styles.buttonText}>Alterar Chamado</Text>

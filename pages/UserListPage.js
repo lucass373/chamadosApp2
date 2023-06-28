@@ -75,6 +75,7 @@ export default function UserListPage({ route, navigation }) {
           routeProtocolo: chamado.protocolo, 
           routeNome: chamado.nome, 
           routeTecnico: chamado.tecnico,
+          routeIdTec: chamado.idTecnico,
           routeProblema:chamado.problema,
           routeStatus: chamado.status,
           routeSala: chamado.sala,

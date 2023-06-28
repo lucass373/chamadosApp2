@@ -14,13 +14,14 @@ import {
   orderByChild,
   query,
   ref,
-} from 'firebase/database'
-import { init } from '../DAO/firebase'
-import DaoChamados from '../DAO/DaoChamados'
-import DaoUser from '../DAO/DaoUser'
-import { SafeAreaProvider } from 'react-native-safe-area-context'
-import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
-import { AntDesign } from '@expo/vector-icons'
+} from "firebase/database";
+import { init } from "../DAO/firebase";
+import DaoChamados from "../DAO/DaoChamados";
+import DaoUser from "../DAO/DaoUser";
+import { SafeAreaProvider } from "react-native-safe-area-context";
+import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
+import { AntDesign } from "@expo/vector-icons";
+import { CommonActions, useFocusEffect, useIsFocused } from "@react-navigation/native";
 
 export default function ChamadoPage({ route, navigation }) {
   const {
@@ -29,6 +30,7 @@ export default function ChamadoPage({ route, navigation }) {
     routeProtocolo,
     routeNome,
     routeTecnico,
+    routeIdTecnico,
     routeStatus,
     routeProblema,
   } = route.params;
@@ -37,14 +39,14 @@ export default function ChamadoPage({ route, navigation }) {
   const daoUser = new DaoUser();
   const db = getDatabase(init);
 
-  const [problema, setProblema] = useState(routeProblema)
-  const [sala, setSala] = useState(routeSala)
-  const [usuario, setUsuario] = useState(routeNome)
-  const [tecnico, setTecnico] = useState('')
-  const [auxiliares, setAuxiliares] = useState([])
-  const [status, setStatus] = useState('')
-  const [idTec, setIdTec] = useState('')
-  const [user, setUser] = useState({})
+  const [problema, setProblema] = useState(routeProblema);
+  const [sala, setSala] = useState(routeSala);
+  const [usuario, setUsuario] = useState(routeNome);
+  const [tecnico, setTecnico] = useState(routeTecnico);
+  const [auxiliares, setAuxiliares] = useState([]);
+  const [status, setStatus] = useState(routeStatus);
+  const [idTec, setIdTec] = useState(routeIdTecnico);
+
 
   useEffect(() => {
     onValue(
@@ -63,17 +65,8 @@ export default function ChamadoPage({ route, navigation }) {
     );
   }, []);
 
-  useEffect(() => {
-    onValue(
-      query(ref(db, "chamados/" + routeProtocolo), orderByChild("tecnico")),
-      (snapshot) => {
-        setTecnico(snapshot.val().tecnico)
-        setIdTec(snapshot.val().idTecnico)
-        setStatus(snapshot.val().status)
-      },
-    )
-  }, [])
-
+  
+  
   function excluirAux(uid) {
     daoChamados.obterAuxPeloUid(uid, routeProtocolo).then((e) => {
       daoChamados.excluirAux(routeProtocolo, e.num).then((a) => {
@@ -90,7 +83,7 @@ export default function ChamadoPage({ route, navigation }) {
     const inf = await daoUser.obterUserPeloUid(routeId);
     daoChamados
       .alterarTecnico(inf.nome, routeProtocolo, routeId)
-      .then(alert("tecnico incluído com sucesso"));
+      .then(alert("tecnico incluído com sucesso"), setTecnico(inf.nome),setIdTec(routeId))
   }
 
   async function excluirTec() {
@@ -98,6 +91,22 @@ export default function ChamadoPage({ route, navigation }) {
     daoChamados
       .alterarTecnico(null, routeProtocolo, null)
       .then(alert("tecnico removido com sucesso"));
+  }
+
+  async function excluirChamado(id){
+    console.log("e")
+    await daoChamados.excluirChamado(id).then(e=>
+      alert(e),
+      navigation.dispatch(
+        CommonActions.reset({
+          index: 0,
+          routes: [
+            { name: 'PerfilPage', params:{ id: routeId} }],
+        })
+      )
+    ).catch(a=>{
+      alert(a)
+    })
   }
 
   function ItemComponent({ items }) {
@@ -111,145 +120,154 @@ export default function ChamadoPage({ route, navigation }) {
       </View>
     );
   }
-
-  return (
-    <SafeAreaView style={styles.container}>
-      <KeyboardAwareScrollView
-        style={styles.container}
-        contentContainerStyle={styles.contentContainer}
-      >
-        <View
-          style={{
-            width: '100%',
-            display: 'flex',
-            flexDirection: 'row',
-            alignItems: 'center',
-            marginLeft: 70,
-            marginBottom: 20,
-          }}
+    return (
+      <SafeAreaView style={styles.container}>
+        <KeyboardAwareScrollView
+          style={styles.container}
+          contentContainerStyle={styles.contentContainer}
         >
-          <TouchableOpacity
-            onPress={() => navigation.goBack()}
-            style={{ marginRight: 30 }}
-          >
-            <AntDesign name="leftcircle" size={30} color="black" />
-          </TouchableOpacity>
-          <Text style={styles.title}>Chamado: {routeProtocolo}</Text>
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Problema:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Problema"
-            value={problema}
-            onChangeText={setProblema}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Sala:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Sala"
-            value={sala}
-            onChangeText={setSala}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Usuário:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Usuário"
-            value={usuario}
-            onChangeText={setUsuario}
-          />
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Técnico:</Text>
-          {tecnico != null ? <Text>{tecnico}</Text> : <Text>Sem Técnico</Text>}
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Auxiliares:</Text>
-          {auxiliares.length > 0 ? (
-            <ItemComponent items={auxiliares} />
-          ) : (
-            <Text style={styles.title}>Sem Auxiliares</Text>
-          )}
-        </View>
-        <View style={styles.inputContainer}>
-          <Text style={styles.label}>Status:</Text>
-          <TextInput
-            style={styles.input}
-            placeholder="Status"
-            value={status}
-            onChangeText={setStatus}
-          />
-        </View>
-        <View style={styles.viewOpcs}>
-          {idTec == routeId ? (
-            <></>
-          ) : (
-            <>
-              {tecnico != null ? (
-                <TouchableOpacity
-                  onPress={() => {
-                    daoChamados
-                      .incluirAuxiliar(
-                        routeProtocolo,
-                        usuario.split(" ")[0],
-                        routeId
-                      )
-                      .then((e) => {
-                        if (e) {
-                          alert("auxiliar incluido");
-                        }
-                      })
-                      .catch((a) => {
-                        console.log(a);
-                      });
-                  }}
-                  style={styles.button}
-                >
-                  <Text style={styles.buttonText}>Auxiliar chamado</Text>
-                </TouchableOpacity>
-              ) : (
-                <TouchableOpacity
-                  style={styles.button}
-                  onPress={() => {
-                    incluirTec();
-                  }}
-                >
-                  <Text style={styles.buttonText}>Receber Chamado</Text>
-                </TouchableOpacity>
-              )}
-            </>
-          )}
-
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Excluir Chamado</Text>
-          </TouchableOpacity>
-        </View>
-        <View style={styles.viewOpcs}>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() =>
-              daoChamados.alterarChamado(routeProtocolo, problema, sala, status)
-            }
-          >
-            <Text style={styles.buttonText}>Alterar Chamado</Text>
-          </TouchableOpacity>
-          <TouchableOpacity
-            style={styles.button}
-            onPress={() => {
-              idTec == routeId ? excluirTec() : excluirAux(routeId);
+          <View
+            style={{
+              width: "100%",
+              display: "flex",
+              flexDirection: "row",
+              alignItems: "center",
+              marginLeft: 70,
+              marginBottom: 20,
             }}
           >
-            <Text style={styles.buttonText}>Desistir do Chamado</Text>
-          </TouchableOpacity>
-        </View>
-      </KeyboardAwareScrollView>
-    </SafeAreaView>
-  );
-}
+            <TouchableOpacity
+              onPress={() => navigation.goBack()}
+              style={{ marginRight: 30 }}
+            >
+              <AntDesign name="leftcircle" size={30} color="black" />
+            </TouchableOpacity>
+            <Text style={styles.title}>Chamado: {routeProtocolo}</Text>
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Problema:</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Problema"
+              value={problema}
+              onChangeText={setProblema}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Sala:</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Sala"
+              value={sala}
+              onChangeText={setSala}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Usuário:</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Usuário"
+              value={usuario}
+              onChangeText={setUsuario}
+            />
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Técnico:</Text>
+            {tecnico != null || tecnico != undefined ? (
+              <Text>{tecnico}</Text>
+            ) : (
+              <Text>Sem Técnico</Text>
+            )}
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Auxiliares:</Text>
+            {auxiliares.length > 0 ? (
+              <ItemComponent items={auxiliares} />
+            ) : (
+              <Text style={styles.title}>Sem Auxiliares</Text>
+            )}
+          </View>
+          <View style={styles.inputContainer}>
+            <Text style={styles.label}>Status:</Text>
+            <TextInput
+              style={styles.input}
+              placeholder="Status"
+              value={status}
+              onChangeText={setStatus}
+            />
+          </View>
+          <View style={styles.viewOpcs}>
+            {idTec == routeId ? (
+              <></>
+            ) : (
+              <>
+                {tecnico != null ? (
+                  <TouchableOpacity
+                    onPress={() => {
+                      daoChamados
+                        .incluirAuxiliar(
+                          routeProtocolo,
+                          usuario.split(" ")[0],
+                          routeId
+                        )
+                        .then((e) => {
+                          if (e) {
+                            alert("auxiliar incluido");
+                          }
+                        })
+                        .catch((a) => {
+                          console.log(a);
+                        });
+                    }}
+                    style={styles.button}
+                  >
+                    <Text style={styles.buttonText}>Auxiliar chamado</Text>
+                  </TouchableOpacity>
+                ) : (
+                  <TouchableOpacity
+                    style={styles.button}
+                    onPress={() => {
+                      incluirTec();
+                    }}
+                  >
+                    <Text style={styles.buttonText}>Receber Chamado</Text>
+                  </TouchableOpacity>
+                )}
+              </>
+            )}
+
+            <TouchableOpacity onPress={()=>{excluirChamado(routeProtocolo)}} style={styles.button}>
+              <Text style={styles.buttonText}>Excluir Chamado</Text>
+            </TouchableOpacity>
+
+          </View>
+          <View style={styles.viewOpcs}>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() =>
+                daoChamados.alterarChamado(
+                  routeProtocolo,
+                  problema,
+                  sala,
+                  status
+                )
+              }
+            >
+              <Text style={styles.buttonText}>Alterar Chamado</Text>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.button}
+              onPress={() => {
+                idTec == routeId ? excluirTec() : excluirAux(routeId);
+              }}
+            >
+              <Text style={styles.buttonText}>Desistir do Chamado</Text>
+            </TouchableOpacity>
+          </View>
+        </KeyboardAwareScrollView>
+      </SafeAreaView>
+    );
+  }
 
 const styles = StyleSheet.create({
   container: {

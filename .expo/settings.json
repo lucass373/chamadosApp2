@@ -5,6 +5,6 @@
   "minify": false,
   "urlRandomness": "fauIqJI",
   "https": false,
-  "scheme": "exp+chamados2",
+  "scheme": "com.lslucas98.chamados2",
   "devClient": false
 }
