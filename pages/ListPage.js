@@ -6,12 +6,7 @@ import DaoChamados from "../DAO/DaoChamados";
 import DaoUser from "../DAO/DaoUser";
 import { getDatabase, onValue, orderByChild, query, ref } from "firebase/database";
 import { init } from "../DAO/firebase";
-<<<<<<< HEAD
-import { AntDesign } from "@expo/vector-icons";
-
-=======
 import { AntDesign } from '@expo/vector-icons'
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
 
 
 WebBrowser.maybeCompleteAuthSession();
@@ -43,36 +38,6 @@ export default function ListPage({ route, navigation }) {
   
   return (
     <View style={styles.container}>
-<<<<<<< HEAD
-       <View
-          style={{
-            marginLeft: 60,
-            marginBottom: 20,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            width: "100%",
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-            style={{
-              backgroundColor: "gray",
-              height: 40,
-              width: 40,
-              alignItems: "center",
-              justifyContent: "center",
-              marginRight: 30,
-              borderRadius: 20,
-            }}
-          >
-            <AntDesign name="left" size={24} color="black" />
-          </TouchableOpacity>
-          <Text style={styles.title}>Listar Chamado</Text>
-=======
       <View
           style={{
             width: '100%',
@@ -90,7 +55,6 @@ export default function ListPage({ route, navigation }) {
             <AntDesign name="leftcircle" size={30} color="black" />
           </TouchableOpacity>
           <Text style={styles.title}>Listar Chamados</Text>
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
         </View>
       {
     

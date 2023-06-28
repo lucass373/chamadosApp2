@@ -6,12 +6,7 @@ import DaoChamados from "../DAO/DaoChamados";
 import DaoUser from "../DAO/DaoUser";
 import { equalTo, getDatabase, onValue, orderByChild, query, ref } from "firebase/database";
 import { init } from "../DAO/firebase";
-<<<<<<< HEAD
-import { AntDesign } from '@expo/vector-icons'; 
-=======
-import DaoUser from "../DAO/DaoUser";
 import { AntDesign } from '@expo/vector-icons'
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
 
 
 WebBrowser.maybeCompleteAuthSession();
@@ -20,28 +15,16 @@ export default function UserListPage({ route, navigation }) {
   const db = getDatabase(init)
   const daoCham = new DaoChamados();
   const daoUser = new DaoUser();
-<<<<<<< HEAD
-=======
-
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
   const { id } = route.params; 
   const [chamados, setChamados] = useState([]);
   const [email, setEmail] = useState("");
 
-<<<<<<< HEAD
-  async function obterUser(){
-    const promisse = await daoUser.obterUserPeloUid(id)
-    setEmail(promisse.email)
-  }
-  obterUser();
-=======
   async function obterChamados(){
     const promisse = await daoUser.obterUserPeloUid(id)
     setEmail(promisse.email)
   }
 
   obterChamados()
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
    useEffect(() => {
     onValue(
       query(
@@ -66,32 +49,6 @@ export default function UserListPage({ route, navigation }) {
     <View style={styles.container}>
        <View
           style={{
-<<<<<<< HEAD
-            marginLeft: 60,
-            marginBottom: 20,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            width: "100%",
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-            style={{
-              backgroundColor: "gray",
-              height: 40,
-              width: 40,
-              alignItems: "center",
-              justifyContent: "center",
-              marginRight: 30,
-              borderRadius: 20,
-            }}
-          >
-            <AntDesign name="left" size={24} color="black" />
-=======
             width: '100%',
             display: 'flex',
             flexDirection: 'row',
@@ -105,7 +62,6 @@ export default function UserListPage({ route, navigation }) {
             style={{ marginRight: 30 }}
           >
             <AntDesign name="leftcircle" size={30} color="black" />
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
           </TouchableOpacity>
           <Text style={styles.title}>Listar Meus Chamados</Text>
         </View>

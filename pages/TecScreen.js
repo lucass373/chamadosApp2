@@ -9,11 +9,7 @@ import {
 } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
-<<<<<<< HEAD
-import { AntDesign } from "@expo/vector-icons";
-=======
 import { AntDesign } from '@expo/vector-icons'
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
 
 WebBrowser.maybeCompleteAuthSession();
 
@@ -23,34 +19,6 @@ export default function TecScreen({ route, navigation }) {
     <View style={styles.container}>
        <View
           style={{
-<<<<<<< HEAD
-            marginLeft: 60,
-            marginBottom: 20,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            width: "100%",
-            alignItems: "center",
-          }}
-        >
-          <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-            style={{
-              backgroundColor: "gray",
-              height: 40,
-              width: 40,
-              alignItems: "center",
-              justifyContent: "center",
-              marginRight: 30,
-              borderRadius: 20,
-            }}
-          >
-            <AntDesign name="left" size={24} color="black" />
-          </TouchableOpacity>
-          <Text style={styles.title}>Pagina Técnico</Text>
-=======
             width: '100%',
             display: 'flex',
             flexDirection: 'row',
@@ -70,7 +38,6 @@ export default function TecScreen({ route, navigation }) {
         <View style={styles.viewOpc}>
           <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('ListPage',{id: id})}}><Text>Listar Chamados</Text></TouchableOpacity>
           <TouchableOpacity style={styles.button}><Text>Listar Usuários</Text></TouchableOpacity>
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
         </View>
       <View style={styles.viewOpc}>
         <TouchableOpacity
@@ -118,16 +85,12 @@ const styles = StyleSheet.create({
     borderColor: "black",
     borderWidth: 2,
     width: 170,
-<<<<<<< HEAD
-    height: 40,
-=======
     height: 40
   },
   title: {
     fontSize: 24,
     fontWeight: 'bold',
     marginBottom: 5,
->>>>>>> d845d05d18d509569d5e792f224b281581b830e6
   },
 
 });
