@@ -2,7 +2,12 @@ import { useEffect, useState } from "react";
 import { StyleSheet, Text, View, Button, Image, TouchableOpacity } from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
+<<<<<<< HEAD
 import { AntDesign } from '@expo/vector-icons'; 
+=======
+import { AntDesign } from '@expo/vector-icons'
+
+>>>>>>> d845d05d18d509569d5e792f224b281581b830e6
 WebBrowser.maybeCompleteAuthSession();
 
 export default function UserPage({route, navigation}) {
@@ -10,6 +15,7 @@ export default function UserPage({route, navigation}) {
     const {id} = route.params;
   return (
     <View style={styles.container}>
+<<<<<<< HEAD
       <View
           style={{
             marginLeft: 60,
@@ -36,6 +42,23 @@ export default function UserPage({route, navigation}) {
             }}
           >
             <AntDesign name="left" size={24} color="black" />
+=======
+     <View
+          style={{
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginLeft: 70,
+            marginBottom: 20,
+          }}
+        >
+          <TouchableOpacity
+            onPress={() => navigation.goBack()}
+            style={{ marginRight: 30 }}
+          >
+            <AntDesign name="leftcircle" size={30} color="black" />
+>>>>>>> d845d05d18d509569d5e792f224b281581b830e6
           </TouchableOpacity>
           <Text style={styles.title}>Página do Usuário</Text>
         </View>

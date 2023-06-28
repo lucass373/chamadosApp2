@@ -14,13 +14,13 @@ import {
   orderByChild,
   query,
   ref,
-} from "firebase/database";
-import { init } from "../DAO/firebase";
-import DaoChamados from "../DAO/DaoChamados";
-import DaoUser from "../DAO/DaoUser";
-import { SafeAreaProvider } from "react-native-safe-area-context";
-import { KeyboardAwareScrollView } from "react-native-keyboard-aware-scroll-view";
-import { AntDesign } from "@expo/vector-icons";
+} from 'firebase/database'
+import { init } from '../DAO/firebase'
+import DaoChamados from '../DAO/DaoChamados'
+import DaoUser from '../DAO/DaoUser'
+import { SafeAreaProvider } from 'react-native-safe-area-context'
+import { KeyboardAwareScrollView } from 'react-native-keyboard-aware-scroll-view'
+import { AntDesign } from '@expo/vector-icons'
 
 export default function ChamadoPage({ route, navigation }) {
   const {
@@ -37,14 +37,14 @@ export default function ChamadoPage({ route, navigation }) {
   const daoUser = new DaoUser();
   const db = getDatabase(init);
 
-  const [problema, setProblema] = useState(routeProblema);
-  const [sala, setSala] = useState(routeSala);
-  const [usuario, setUsuario] = useState(routeNome);
-  const [tecnico, setTecnico] = useState("");
-  const [auxiliares, setAuxiliares] = useState([]);
-  const [status, setStatus] = useState(routeStatus);
-  const [idTec, setIdTec] = useState("");
-  const [user, setUser] = useState({});
+  const [problema, setProblema] = useState(routeProblema)
+  const [sala, setSala] = useState(routeSala)
+  const [usuario, setUsuario] = useState(routeNome)
+  const [tecnico, setTecnico] = useState('')
+  const [auxiliares, setAuxiliares] = useState([])
+  const [status, setStatus] = useState('')
+  const [idTec, setIdTec] = useState('')
+  const [user, setUser] = useState({})
 
   useEffect(() => {
     onValue(
@@ -67,11 +67,12 @@ export default function ChamadoPage({ route, navigation }) {
     onValue(
       query(ref(db, "chamados/" + routeProtocolo), orderByChild("tecnico")),
       (snapshot) => {
-        setTecnico(snapshot.val().tecnico);
-        setIdTec(snapshot.val().idTecnico);
-      }
-    );
-  }, []);
+        setTecnico(snapshot.val().tecnico)
+        setIdTec(snapshot.val().idTecnico)
+        setStatus(snapshot.val().status)
+      },
+    )
+  }, [])
 
   function excluirAux(uid) {
     daoChamados.obterAuxPeloUid(uid, routeProtocolo).then((e) => {
@@ -119,30 +120,19 @@ export default function ChamadoPage({ route, navigation }) {
       >
         <View
           style={{
-            marginLeft: 60,
+            width: '100%',
+            display: 'flex',
+            flexDirection: 'row',
+            alignItems: 'center',
+            marginLeft: 70,
             marginBottom: 20,
-            display: "flex",
-            flexDirection: "row",
-            justifyContent: "flex-start",
-            width: "100%",
-            alignItems: "center",
           }}
         >
           <TouchableOpacity
-            onPress={() => {
-              navigation.goBack();
-            }}
-            style={{
-              backgroundColor: "gray",
-              height: 40,
-              width: 40,
-              alignItems: "center",
-              justifyContent: "center",
-              marginRight: 30,
-              borderRadius: 20,
-            }}
+            onPress={() => navigation.goBack()}
+            style={{ marginRight: 30 }}
           >
-            <AntDesign name="left" size={24} color="black" />
+            <AntDesign name="leftcircle" size={30} color="black" />
           </TouchableOpacity>
           <Text style={styles.title}>Chamado: {routeProtocolo}</Text>
         </View>

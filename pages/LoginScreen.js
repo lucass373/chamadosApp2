@@ -1,5 +1,5 @@
 import { useEffect, useState, Alert } from "react";
-import { StyleSheet, Text, View, Button, Image, TextInput} from "react-native";
+import { StyleSheet, Text, View, Button, Image, TextInput, ActivityIndicator} from "react-native";
 import * as WebBrowser from "expo-web-browser";
 import * as Google from "expo-auth-session/providers/google";
 import User from "../classes/User"
@@ -14,6 +14,7 @@ export default function LoginScreen({navigation}) {
   const [token, setToken] = useState("");
   const [userInfo, setUserInfo] = useState(0);
   const [userMatr, setUserMatr] = useState(0);
+  const [existe, setExiste] = useState(false);
   
 
   const dao = new DaoUser()
@@ -41,9 +42,8 @@ export default function LoginScreen({navigation}) {
       setUserInfo(user);
 
       let existeUid = await dao.verificarExiste(user.id)
-
+      setExiste(existeUid)
       if(existeUid){
-        console.log(existeUid)
         navigation.navigate("PerfilPage",{id: user.id})
       }
     } catch (error) {
@@ -57,7 +57,6 @@ export default function LoginScreen({navigation}) {
      
   }
   else{
-    console.log(existeMat)
     if(existeMat == true){
       alert("Matricula Existe")
     }else{
@@ -79,9 +78,14 @@ export default function LoginScreen({navigation}) {
           }}
         />
       ) : (<View>
-        <Text style={styles.text}>Digite Sua matrícula</Text>
-        <TextInput placeholder="Digite sua Matrícula" onChangeText={setUserMatr} value={userMatr} />
-        <Button title="Incluir" onPress={()=>incluirUsr(userMatr)} />
+        {existe == true ?   (<ActivityIndicator/>) :(
+           <View>
+           <Text style={styles.text}>Digite Sua matrícula</Text>
+           <TextInput placeholder="Digite sua Matrícula" onChangeText={setUserMatr} value={userMatr} />
+           <Button title="Incluir" onPress={()=>incluirUsr(userMatr)} />
+           </View>
+        )}
+       
         </View>
       )}
     </View>

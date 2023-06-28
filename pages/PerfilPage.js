@@ -10,7 +10,7 @@ export default function PerfilPage({route, navigation}) {
     const {id} = route.params;
   return (
     <View style={styles.container}>
-     <Text>Escolha seu perfil</Text>
+     <Text style={styles.title}>Escolha seu perfil</Text>
         <View style={styles.viewOpc}>
           <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate('TecScreen',{id: id})}}><Text>Tecnico</Text></TouchableOpacity>
           <TouchableOpacity style={styles.button} onPress={()=>{navigation.navigate("UserPage",{id: id})}}><Text>Usuário</Text></TouchableOpacity>
@@ -45,6 +45,11 @@ const styles = StyleSheet.create({
     borderWidth: 2,
     width: 170,
     height: 40
-  }
+  },
+  title: {
+    fontSize: 24,
+    fontWeight: 'bold',
+    marginBottom: 5,
+  },
 
 });
