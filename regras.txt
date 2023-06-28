@@ -1,0 +1,18 @@
+regas Firebase:
+{
+  "rules": {
+    ".read": true,
+    ".write": true,
+    "chamados": {
+      "$protocolo":{
+        "auxiliares":{
+          ".indexOn":"num"
+        },
+      },
+      ".indexOn": "protocolo",
+      "users": {
+        ".indexOn": "uid"
+      },
+    },
+  }
+}
