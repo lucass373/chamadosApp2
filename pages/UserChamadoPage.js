@@ -64,31 +64,26 @@ export default function UserChamadoPage({ route, navigation }) {
   }, [])
 
   useEffect(() => {
-    if(excluindo === 0){
-      console.log(excluindo)
     onValue(
       query(ref(db, 'chamados/' + routeProtocolo), orderByChild('tecnico')),
       (snapshot) => {
-        
-        
-          console.log("setting")
+        try{
           setTecnico(snapshot.val().tecnico)
           setIdTec(snapshot.val().idTecnico)
           setStatus(snapshot.val().status)
         }
-      
+        catch{
+
+        }
+      },
     )
-      }else{
-        console.log("exclui")
-      }
-  }, [excluindo])
+  }, [])
 
 
   async function excluirChamado(id){
-    setExcluindo(1)
     await daoChamados.excluirChamado(id).then(e=>
       alert(e),
-      navigation.goBack()
+      navigation.navigate("UserPage",{id: routeId})
     ).catch(a=>{
       alert(a)
     })
@@ -174,7 +169,7 @@ export default function UserChamadoPage({ route, navigation }) {
           <Text>{status}</Text>
         </View>
         <View style={styles.viewOpcs}>
-          <TouchableOpacity onPress={()=>{[excluirChamado(routeProtocolo)]}} style={styles.button}>
+          <TouchableOpacity onPress={()=>{[setExcluindo(1),excluirChamado(routeProtocolo)]}} style={styles.button}>
             <Text style={styles.buttonText}>Excluir Chamado</Text>
           </TouchableOpacity>
         </View>

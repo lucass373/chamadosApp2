@@ -357,6 +357,30 @@ async excluirAux(protocolo,num){
 });
 }
 
+async obterTec(protocolo) {
+    let connection = await this.obterConexao();
+    const chamadosRef = ref(connection, "chamados/"+protocolo);
+    const snapshot = await get(chamadosRef);
+    const filt = [];
+    return new Promise((resolve, reject) => {
+      onValue(
+        query(
+          chamadosRef,
+           orderByChild('tecnico'),
+           ),
+           (snapshot)=>{
+            filt.push(snapshot.val().tecnico)
+           }
+           )
+           if(filt.length > 0){
+            resolve(filt)
+           }else{
+            reject("Não foram encontrados auxiliares")
+           }
+    });
+  }
+
+
 /*r
    async obterUserPeloUid(uid) {
     let connection = await this.obterConexao();
